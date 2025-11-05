@@ -120,7 +120,7 @@ public class Menu {
             try {
                 System.out.print(prompt);
                 return Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException eInput) {
                 System.out.println("Ошибка: введите целое число.");
             }
         }
