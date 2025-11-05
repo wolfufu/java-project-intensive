@@ -1,0 +1,12 @@
+150,Toyota Camry,2020
+-50,BMW X5,2022
+300,,2018
+9999,Mercedes S-Class,2023
+120,Kia Rio,1800
+abc,Honda CR-V,2021
+200,Ford Focus,2035
+75,   ,2019
+300,Volkswagen Golf,2024
+0,Tesla Model S,2022
+150,Nissan X-Trail,abc
+999,Hyundai Tucson,2021

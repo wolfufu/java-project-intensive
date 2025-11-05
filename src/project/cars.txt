@@ -1,0 +1,6 @@
+150,Toyota Camry,2020
+250,BMW X5,2022
+90,Lada Vesta,2018
+300,Mercedes S-Class,2023
+120,Kia Rio,2021
+180,Honda CR-V,2019
