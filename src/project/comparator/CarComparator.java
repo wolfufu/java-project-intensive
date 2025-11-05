@@ -17,7 +17,7 @@ public class CarComparator implements Comparator<Car> {
         int result = switch (byField) {
             case POWER -> Integer.compare(o1.getPower(), o2.getPower());
             case MODEL -> o1.getModel().compareTo(o2.getModel());
-            case PRODUCTION_YEAR -> Integer.compare(o1.getYear(), o2.getYear());
+            case YEAR -> Integer.compare(o1.getYear(), o2.getYear());
         };
         if (result != 0) {
             return result;
