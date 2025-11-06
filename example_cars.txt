@@ -1,0 +1,12 @@
+200,Volkswagen Tiguan,2021
+180,Skoda Octavia,2019
+320,Audi Q7,2022
+110,Hyundai Solaris,2020
+280,BMW 5 Series,2023
+95,Lada Granta,2018
+260,Mercedes GLE,2022
+140,Kia Sportage,2021
+170,Toyota RAV4,2020
+310,Porsche Cayenne,2023
+130,Ford Focus,2019
+240,Nissan Qashqai,2021
