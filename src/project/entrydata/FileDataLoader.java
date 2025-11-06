@@ -1,10 +1,23 @@
 package project.entrydata;
 
 import project.model.Car;
+import project.validator.CarValidator;
+import project.validator.Validator;
+
 import java.io.*;
 import java.util.*;
 
 public class FileDataLoader {
+
+    private final Validator<Car> carValidator;
+
+    public FileDataLoader() {
+        this.carValidator = new CarValidator();
+    }
+
+    public FileDataLoader(Validator<Car> carValidator) {
+        this.carValidator = carValidator;
+    }
 
     public List<Car> loadFromFile(String filename) {
 
@@ -20,9 +33,10 @@ public class FileDataLoader {
                 lineNumber++;
                 try {
                     Car car = parseCar(line);
-                    if (car != null) {
-                        cars.add(car);
+                    if (!carValidator.isValid(car)) {
+                        throw new IllegalArgumentException(carValidator.getErrorMessage(car));
                     }
+                    cars.add(car);
                 } catch (Exception e) {
                     System.err.println("Ошибка в строке " + lineNumber + ": " + line);
                     System.err.println("Причина: " + e.getMessage());
