@@ -5,9 +5,15 @@ import project.model.Car;
 import java.util.Comparator;
 
 public class CarComparator implements Comparator<Car> {
-    private final CarComparatorFactory.ByField byField;
 
-    public CarComparator(CarComparatorFactory.ByField byField) {
+    public enum ByField {
+        POWER,
+        MODEL,
+        YEAR
+    }
+    private final ByField byField;
+
+    public CarComparator(ByField byField) {
         this.byField = byField;
     }
 
