@@ -4,3 +4,4 @@
 300,Mercedes S-Class,2023
 120,Kia Rio,2021
 180,Honda CR-V,2019
+180,Honda CR-V,2019
