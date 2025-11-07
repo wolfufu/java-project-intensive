@@ -2,20 +2,19 @@ package project.entrydata;
 
 import project.model.Car;
 import project.validator.CarValidator;
-import project.validator.Validator;
 
 import java.io.*;
 import java.util.*;
 
 public class FileDataLoader {
 
-    private final Validator<Car> carValidator;
+    private final CarValidator carValidator;
 
     public FileDataLoader() {
         this.carValidator = new CarValidator();
     }
 
-    public FileDataLoader(Validator<Car> carValidator) {
+    public FileDataLoader(CarValidator carValidator) {
         this.carValidator = carValidator;
     }
 
@@ -34,10 +33,9 @@ public class FileDataLoader {
                 lineNumber++;
                 try {
                     Car car = parseCar(line);
-                    if (!carValidator.isValid(car)) {
-                        throw new IllegalArgumentException(carValidator.getErrorMessage(car));
+                    if (car != null) {
+                        cars.add(car);
                     }
-                    cars.add(car);
                 } catch (Exception e) {
                     System.err.println("Ошибка в строке " + lineNumber + ": " + line);
                     System.err.println("Причина: " + e.getMessage());
@@ -82,9 +80,11 @@ public class FileDataLoader {
         }
 
         try {
-            int power = Integer.parseInt(parts[0].trim());
-            String model = parts[1].trim();
-            int year = Integer.parseInt(parts[2].trim());
+            int power = Integer.parseInt(parts[0].strip());
+            String model = parts[1].strip();
+            int year = Integer.parseInt(parts[2].strip());
+
+            validateFields(power, model, year); // throws IllegalArgumentException
 
             return Car.builder()
                     .power(power)
@@ -94,8 +94,22 @@ public class FileDataLoader {
 
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Некорректный числовой формат");
-        } catch (IllegalArgumentException e) {
-            throw e;
+//        } catch (IllegalArgumentException e) {
+//            throw e;
+        }
+    }
+
+    private void validateFields(int power, String model, int year) {
+
+        if (!carValidator.isValidPower(power)
+                || !carValidator.isValidModel(model)
+                || !carValidator.isValidYear(year)) {
+            String errorMessage;
+            errorMessage = carValidator.getPowerErrorMessage(power).strip()
+                    + carValidator.getModelErrorMessage(model).strip()
+                    + carValidator.getYearErrorMessage(year).strip();
+
+            throw new IllegalArgumentException(errorMessage);
         }
     }
 }

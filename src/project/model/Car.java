@@ -1,8 +1,5 @@
 package project.model;
 
-import project.validator.Validator;
-import project.validator.CarValidator;
-
 public class Car {
     private final int power;
     private final String model;
@@ -35,11 +32,6 @@ public class Car {
         private int power;
         private String model;
         private int year;
-        private final Validator<Car> validator;
-
-        public Builder() {
-            this.validator = new CarValidator();
-        }
 
         public Builder power(int power) {
             this.power = power;
@@ -57,12 +49,7 @@ public class Car {
         }
 
         public Car build() {
-            Car car = new Car(this);
-            if (!validator.isValid(car)) {
-                throw new IllegalArgumentException("Car validation failed: " +
-                        validator.getErrorMessage(car));
-            }
-            return car;
+            return new Car(this);
         }
     }
 
