@@ -8,9 +8,16 @@ public class Main {
         // Тестируем классы
         testCarAndValidator();
 
-        // Существующий код
-        Menu menu = new Menu();
-        menu.run();
+        Menu menu = null;
+        try {
+            menu = new Menu();
+            menu.run();
+        } finally {
+            // Гарантированно завершаем ThreadPool
+            if (menu != null) {
+                menu.shutdown();
+            }
+        }
     }
 
     private static void testCarAndValidator() {
