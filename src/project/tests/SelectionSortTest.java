@@ -1,8 +1,10 @@
-package project.sort;
+package project.tests;
 
 import project.model.Car;
 import project.comparator.CarComparator;
 import org.junit.jupiter.api.Test;
+import project.sort.SelectionSort;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
