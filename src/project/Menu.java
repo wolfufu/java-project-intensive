@@ -2,6 +2,7 @@ package project;
 
 import project.model.Car;
 import project.entrydata.FileDataLoader;
+import project.entrydata.DataEntry; // Добавляем импорт
 import project.sort.SelectionSort;
 import project.sort.SortManager;
 import project.comparator.CarComparator;
@@ -19,6 +20,7 @@ public class Menu {
     private final FileDataLoader fileDataLoader;
     private final SortManager sortManager;
     private final SelectionSort<Car> selectionSort; // Сохраняем для shutdown
+    private final DataEntry dataEntry;
 
     public Menu() {
         this.isRunning = true;
@@ -28,6 +30,7 @@ public class Menu {
         this.selectionSort = new SelectionSort<>(); // Сохраняем экземпляр
         this.sortManager = new SortManager();
         this.sortManager.setSortingStrategy(selectionSort);
+        this.dataEntry = new DataEntry();
     }
 
     public List<Car> getCars() {
@@ -116,10 +119,10 @@ public class Menu {
 
         try {
             List<Car> carsCopy = new ArrayList<>(cars);
-            
+
             System.out.println("\n--- ДО СОРТИРОВКИ ---");
             printFirstAndLast(carsCopy);
-            
+
             if (sortType == 1) {
                 // Синхронная сортировка
                 sortManager.sort(carsCopy, field);
@@ -127,25 +130,25 @@ public class Menu {
                 // Асинхронная сортировка
                 System.out.println("Запуск асинхронной сортировки в ThreadPool...");
                 CompletableFuture<Void> sortFuture = sortManager.sortAsync(carsCopy, field);
-                
+
                 // Показываем прогресс (можно делать другие операции)
                 System.out.println("Сортировка выполняется в фоне...");
                 System.out.println("Можно продолжать работу (в реальном приложении)");
-                
+
                 // Ждем завершения (для демонстрации)
                 sortFuture.join(); // Блокируем до завершения
             } else {
                 System.out.println("Неверный выбор типа сортировки.");
                 return;
             }
-            
+
             System.out.println("\n--- ПОСЛЕ СОРТИРОВКИ ---");
             printFirstAndLast(carsCopy);
-            
+
             cars.clear();
             cars.addAll(carsCopy);
             System.out.println("\nСортировка завершена успешно!");
-            
+
         } catch (Exception e) {
             System.out.println("Ошибка при сортировке: " + e.getMessage());
             e.printStackTrace();
@@ -157,13 +160,13 @@ public class Menu {
             System.out.println("Массив пуст.");
             return;
         }
-        
+
         int showCount = Math.min(3, carList.size());
         System.out.println("Первые " + showCount + " элемента:");
         for (int i = 0; i < showCount; i++) {
             System.out.println("  " + carList.get(i));
         }
-        
+
         if (carList.size() > showCount * 2) {
             System.out.println("...");
             System.out.println("Последние " + showCount + " элемента:");
@@ -181,16 +184,17 @@ public class Menu {
         System.out.println("4. Назад в главное меню");
 
         int choice = getIntInput("Выберите способ: ");
+        boolean flag = addNewElements();
 
         switch (choice) {
             case 1:
-                addNewElements();
+                loadFromFile(flag);
                 break;
             case 2:
-                generateRandomData();
+                generateRandomData(flag);
                 break;
             case 3:
-                manualInput();
+                enterManualData(flag);
                 break;
             case 4:
                 System.out.println("Возвращаем в главное меню...");
@@ -200,7 +204,51 @@ public class Menu {
         }
     }
 
-    private void addNewElements() {
+    private void generateRandomData(boolean addFlag) {
+        System.out.println("\n=== СЛУЧАЙНАЯ ГЕНЕРАЦИЯ ДАННЫХ ===");
+
+        if (!addFlag) {
+            cars.clear();
+            System.out.println("Массив очищен.");
+        }
+
+        dataEntry.dataEntry(false);
+
+        Car[] generatedCars = dataEntry.getCarArray();
+        if (generatedCars != null && generatedCars.length > 0) {
+            for (Car car : generatedCars) {
+                cars.add(car);
+            }
+            System.out.println("Успешно добавлено " + generatedCars.length + " автомобилей.");
+            System.out.println("Всего в массиве: " + cars.size() + " автомобилей.");
+        } else {
+            System.out.println("Не удалось сгенерировать данные.");
+        }
+    }
+
+    private void enterManualData(boolean addFlag) {
+        System.out.println("\n=== РУЧНОЙ ВВОД ДАННЫХ ===");
+
+        if (!addFlag) {
+            cars.clear();
+            System.out.println("Массив очищен.");
+        }
+
+        dataEntry.dataEntry(true);
+
+        Car[] manualCars = dataEntry.getCarArray();
+        if (manualCars != null && manualCars.length > 0) {
+            for (Car car : manualCars) {
+                cars.add(car);
+            }
+            System.out.println("Успешно добавлено " + manualCars.length + " автомобилей.");
+            System.out.println("Всего в массиве: " + cars.size() + " автомобилей.");
+        } else {
+            System.out.println("Не удалось ввести данные.");
+        }
+    }
+
+    private boolean addNewElements() {
         System.out.println("\n=== ЗАПОЛНЕНИЕ ===");
         System.out.println("1. Перезаписать массив");
         System.out.println("2. Добавить к существующему");
@@ -209,14 +257,13 @@ public class Menu {
 
         switch (choice) {
             case 1:
-                loadFromFile(false);
-                break;
+                return false;
             case 2:
-                loadFromFile(true);
-                break;
+                return true;
             default:
                 System.out.println("Неверный выбор.");
         }
+        return false;
     }
 
     private void loadFromFile(boolean addFlag) {
@@ -269,83 +316,6 @@ public class Menu {
         } else {
             System.out.println("Не удалось загрузить данные из файла.");
         }
-    }
-
-    private void generateRandomData() {
-        System.out.println("\n=== ГЕНЕРАЦИЯ СЛУЧАЙНЫХ ДАННЫХ ===");
-        int count = getIntInput("Введите количество автомобилей для генерации: ");
-        
-        if (count <= 0) {
-            System.out.println("Количество должно быть положительным числом.");
-            return;
-        }
-
-        System.out.println("1. Перезаписать массив");
-        System.out.println("2. Добавить к существующему");
-        int choice = getIntInput("Выберите вариант: ");
-
-        if (choice == 1) {
-            cars.clear();
-        }
-
-        for (int i = 0; i < count; i++) {
-            int power = (int) (Math.random() * (Constants.MAX_POWER - Constants.MIN_POWER + 1)) + Constants.MIN_POWER;
-            String model = Constants.MODELS_LIST[(int) (Math.random() * Constants.MODELS_LIST.length)];
-            int year = (int) (Math.random() * (Constants.MAX_YEAR - Constants.MIN_YEAR + 1)) + Constants.MIN_YEAR;
-            
-            Car car = Car.builder()
-                    .power(power)
-                    .model(model + " " + (i + 1))
-                    .year(year)
-                    .build();
-            cars.add(car);
-        }
-
-        System.out.println("Сгенерировано " + count + " автомобилей.");
-        System.out.println("Всего в массиве: " + cars.size() + " автомобилей.");
-    }
-
-    private void manualInput() {
-        System.out.println("\n=== РУЧНОЙ ВВОД ДАННЫХ ===");
-        
-        System.out.println("1. Перезаписать массив");
-        System.out.println("2. Добавить к существующему");
-        int choice = getIntInput("Выберите вариант: ");
-
-        if (choice == 1) {
-            cars.clear();
-        }
-
-        boolean continueInput = true;
-        while (continueInput) {
-            try {
-                System.out.println("\n--- Ввод данных автомобиля ---");
-                int power = getIntInput("Мощность (" + Constants.MIN_POWER + "-" + Constants.MAX_POWER + "): ");
-                System.out.print("Модель: ");
-                String model = scanner.nextLine();
-                int year = getIntInput("Год выпуска (" + Constants.MIN_YEAR + "-" + Constants.MAX_YEAR + "): ");
-
-                Car car = Car.builder()
-                        .power(power)
-                        .model(model)
-                        .year(year)
-                        .build();
-
-                cars.add(car);
-                System.out.println("Автомобиль добавлен: " + car);
-
-                String answer = getStringInput("Добавить еще один автомобиль? (y/n): ");
-                if (!answer.equalsIgnoreCase("y")) {
-                    continueInput = false;
-                }
-
-            } catch (Exception e) {
-                System.out.println("Ошибка при создании автомобиля: " + e.getMessage());
-                System.out.println("Попробуйте еще раз.");
-            }
-        }
-
-        System.out.println("Всего в массиве: " + cars.size() + " автомобилей.");
     }
 
     private void printCurrentArray() {

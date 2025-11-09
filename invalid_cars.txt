@@ -10,3 +10,95 @@ abc,Honda CR-V,2021
 0,Tesla Model S,2022
 150,Nissan X-Trail,abc
 999,Hyundai Tucson,2021
+-100,Audi A4,2022
+450,,2017
+10000,BMW 7 Series,2023
+130,Skoda Octavia,1899
+xyz,Mazda CX-5,2021
+250,Ford Mustang,2050
+80,  ,2020
+500,   ,2022
+-25,Chevrolet Camaro,2021
+600,Honda Civic,
+700,Toyota RAV4,20ab
+-1,Mercedes-Benz,2022
+2000,Volvo XC90,2023
+140,Subaru Forester,1776
+99999,Porsche 911,2023
+160,,2021
+abc123,Hyundai Elantra,2020
+300,Lexus RX,3030
+50,   ,2018
+-10,,2022
+750,Jeep Wrangler,202x
+800,Land Rover,2025
+-75,Fiat 500,2021
+950,Kia Sportage,1492
+123abc,Nissan Altima,2020
+350,Ford Explorer,
+400,Chevrolet Tahoe,20
+-200,BMW X3,2022
+550,,2019
+1100,Audi Q7,2023
+125,Volkswagen Tiguan,abc2021
+-50,Tesla Model 3,2022
+650,Honda Accord,3000
+135,Mazda 3,18O0
+-150,Jeep Cherokee,2021
+725,,2022
+850,Ford F-150,2026
+95,   ,2017
+-300,BMW 5 Series,2022
+475,Mercedes GLE,
+500,Toyota Highlander,20cd
+-25,Hyundai Santa Fe,2021
+575,Nissan Pathfinder,2029
+115,Subaru Outback,16ab
+-100,Audi A6,2022
+625,Volvo S90,2032
+105,,2016
+-400,Range Rover,2022
+675,Porsche Cayenne,
+700,Lexus NX,20ef
+-75,Chevrolet Equinox,2021
+725,Jeep Grand Cherokee,2035
+85,   ,2015
+-500,BMW X7,2022
+775,Mercedes G-Class,
+800,Audi Q5,20gh
+-125,Cadillac Escalade,2021
+825,Lincoln Navigator,2040
+65,,2014
+-600,Tesla Model X,2022
+875,Ferrari 488,
+900,Lamborghini Huracan,20ij
+-175,Maserati Ghibli,2021
+925,Bentley Continental,2045
+45,   ,2013
+-700,BMW 8 Series,2022
+975,Aston Martin DB11,
+1000,Rolls Royce Ghost,20kl
+-225,McLaren 720S,2021
+1025,Bugatti Chiron,2050
+25,,2012
+-800,Porsche 911 Turbo,2022
+1075,Lamborghini Aventador,
+1100,Ferrari SF90,20mn
+-275,Audi R8,2021
+1125,Mercedes AMG GT,2055
+5,   ,2011
+-900,BMW M8,2022
+1175,Porsche Taycan,
+1200,Tesla Roadster,20op
+-325,Nissan GT-R,2021
+1225,Chevrolet Corvette,2060
+-5,,2010
+-950,Acura NSX,2022
+1275,Lexus LFA,
+1300,Subaru WRX STI,20qr
+-375,Ford GT,2021
+1325,Aston Martin Vantage,2065
+-15,   ,2009
+-1000,Honda NSX,2022
+1375,McLaren P1,
+1400,Porsche 918 Spyder,20st
