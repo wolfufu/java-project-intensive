@@ -6,6 +6,7 @@ import project.entrydata.DataEntry; // Добавляем импорт
 import project.sort.SelectionSort;
 import project.sort.SortManager;
 import project.comparator.CarComparator;
+import project.validator.CarValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class Menu {
     private final SortManager sortManager;
     private final SelectionSort<Car> selectionSort; // Сохраняем для shutdown
     private final DataEntry dataEntry;
+    private final CarValidator carValidator;
 
     public Menu() {
         this.isRunning = true;
@@ -31,6 +33,7 @@ public class Menu {
         this.sortManager = new SortManager();
         this.sortManager.setSortingStrategy(selectionSort);
         this.dataEntry = new DataEntry();
+        this.carValidator = new CarValidator();
     }
 
     public List<Car> getCars() {
@@ -177,6 +180,9 @@ public class Menu {
     }
 
     private void fillDataArray() {
+        if (!cars.isEmpty()) {
+            addNewElements();
+        }
         System.out.println("\n=== СПОСОБ ЗАПОЛНЕНИЯ ===");
         System.out.println("1. Загрузить из файла");
         System.out.println("2. Случайная генерация");
@@ -184,17 +190,16 @@ public class Menu {
         System.out.println("4. Назад в главное меню");
 
         int choice = getIntInput("Выберите способ: ");
-        boolean flag = addNewElements();
 
         switch (choice) {
             case 1:
-                loadFromFile(flag);
+                loadFromFile();
                 break;
             case 2:
-                generateRandomData(flag);
+                generateRandomData();
                 break;
             case 3:
-                enterManualData(flag);
+                enterManualData();
                 break;
             case 4:
                 System.out.println("Возвращаем в главное меню...");
@@ -204,69 +209,51 @@ public class Menu {
         }
     }
 
-    private void generateRandomData(boolean addFlag) {
+    private void generateRandomData() {
         System.out.println("\n=== СЛУЧАЙНАЯ ГЕНЕРАЦИЯ ДАННЫХ ===");
-
-        if (!addFlag) {
-            cars.clear();
-            System.out.println("Массив очищен.");
-        }
 
         dataEntry.dataEntry(false);
 
         Car[] generatedCars = dataEntry.getCarArray();
         if (generatedCars != null && generatedCars.length > 0) {
-            for (Car car : generatedCars) {
-                cars.add(car);
-            }
-            System.out.println("Успешно добавлено " + generatedCars.length + " автомобилей.");
-            System.out.println("Всего в массиве: " + cars.size() + " автомобилей.");
+            System.out.println("Получено случайно сгенерированных автомобилей: " + generatedCars.length);
+            addValidCars(generatedCars);
         } else {
             System.out.println("Не удалось сгенерировать данные.");
         }
     }
 
-    private void enterManualData(boolean addFlag) {
+    private void enterManualData() {
         System.out.println("\n=== РУЧНОЙ ВВОД ДАННЫХ ===");
-
-        if (!addFlag) {
-            cars.clear();
-            System.out.println("Массив очищен.");
-        }
 
         dataEntry.dataEntry(true);
 
         Car[] manualCars = dataEntry.getCarArray();
         if (manualCars != null && manualCars.length > 0) {
-            for (Car car : manualCars) {
-                cars.add(car);
-            }
-            System.out.println("Успешно добавлено " + manualCars.length + " автомобилей.");
-            System.out.println("Всего в массиве: " + cars.size() + " автомобилей.");
+            System.out.println("Введены вручную данные автомобилей, количество: " + manualCars.length);
+            addValidCars(manualCars);
         } else {
             System.out.println("Не удалось ввести данные.");
         }
     }
 
-    private boolean addNewElements() {
+    private void addNewElements() {
         System.out.println("\n=== ЗАПОЛНЕНИЕ ===");
         System.out.println("1. Перезаписать массив");
         System.out.println("2. Добавить к существующему");
-
         int choice = getIntInput("Выберите вариант: ");
 
         switch (choice) {
-            case 1:
-                return false;
-            case 2:
-                return true;
-            default:
-                System.out.println("Неверный выбор.");
+            case 1 -> {
+                cars.clear();
+                System.out.println("\nМассив очищен.");
+            }
+            case 2 -> {}
+            default -> System.out.println("Неверный выбор.");
         }
-        return false;
     }
 
-    private void loadFromFile(boolean addFlag) {
+    private void loadFromFile() {
         System.out.println("\n=== ФАЙЛ С ДАННЫМИ ===");
         System.out.println("1. Файл по умолчанию");
         System.out.println("2. Пользовательский файл");
@@ -306,16 +293,31 @@ public class Menu {
         List<Car> loadedCars = fileDataLoader.loadFromFile(filename, checkDuplicates);
 
         if (loadedCars != null && !loadedCars.isEmpty()) {
-            if (!addFlag) {
-                this.cars.clear();
-                System.out.println("Массив очищен.");
-            }
-            this.cars.addAll(loadedCars);
-            System.out.println("Успешно загружено " + loadedCars.size() + " автомобилей из файла.");
-            System.out.println("Всего в массиве: " + cars.size() + " автомобилей.");
+            System.out.println("Успешно загружено автомобилей из файла: " + loadedCars.size());
+            addValidCars(loadedCars);
         } else {
             System.out.println("Не удалось загрузить данные из файла.");
         }
+    }
+
+    private void addValidCars(List<Car> carsList) {
+        Car[] carsArray = carsList.toArray(new Car[0]);
+        addValidCars(carsArray);
+    }
+
+    private void addValidCars(Car[] inputArray) {
+        int i = 0;
+        for (Car car : inputArray) {
+            i++;
+            if (carValidator.isValid(car)) {
+                cars.add(car);
+            } else {
+                System.out.println("Невалидный автомобиль: " + car + "; Errors: " + carValidator.getErrorMessage(car));
+                i--;
+            }
+        }
+        System.out.println("Успешно добавлено " + i + " автомобилей.");
+        System.out.println("Всего в массиве: " + cars.size() + " автомобилей.");
     }
 
     private void printCurrentArray() {
