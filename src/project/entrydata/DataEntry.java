@@ -3,12 +3,14 @@ package project.entrydata;
 import java.util.Random;
 import java.util.Scanner;
 import project.model.Car;
+import project.validator.CarValidator;
 
 public class DataEntry {
     private Scanner scanner;
     private Random randomArray;
     private Car[] myArray;
     private int size;
+    private final CarValidator carValidator;
 
     // Для случайной генерации
     private static final String[] CAR_MODELS = {
@@ -21,6 +23,7 @@ public class DataEntry {
     public DataEntry() {
         this.scanner = new Scanner(System.in);
         this.randomArray = new Random();
+        carValidator = new CarValidator();
     }
 
     public void dataEntry(boolean isManual) {
@@ -50,14 +53,37 @@ public class DataEntry {
 
             while (!validCar) {
                 try {
-                    System.out.print("Модель: ");
-                    String model = scanner.nextLine();
+                    String model;
+                    while (true) {
+                        System.out.print("Модель: ");
+                        model = scanner.nextLine();
+                        if (carValidator.isValidModel(model)) {
+                            break;
+                        }
+                        System.out.println(carValidator.getModelErrorMessage(model));
+                        System.out.println("Повторите ввод.");
+                    }
 
-                    System.out.print("Мощность (л.с.): ");
-                    int power = scanner.nextInt();
-
-                    System.out.print("Год выпуска: ");
-                    int year = scanner.nextInt();
+                    int power;
+                    while (true) {
+                        System.out.print("Мощность (л.с.): ");
+                        power = scanner.nextInt();
+                        if (carValidator.isValidPower(power)) {
+                            break;
+                        }
+                        System.out.println(carValidator.getPowerErrorMessage(power));
+                        System.out.println("Повторите ввод.");
+                    }
+                    int year;
+                    while (true) {
+                        System.out.print("Год выпуска: ");
+                        year = scanner.nextInt();
+                        if (carValidator.isValidYear(year)) {
+                            break;
+                        }
+                        System.out.println(carValidator.getYearErrorMessage(year));
+                        System.out.println("Повторите ввод.");
+                    }
                     scanner.nextLine(); // очистка буфера
 
                     myArray[i] = Car.builder()

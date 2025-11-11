@@ -108,7 +108,6 @@ public class FileDataLoader {
             errorMessage = carValidator.getPowerErrorMessage(power).strip()
                     + carValidator.getModelErrorMessage(model).strip()
                     + carValidator.getYearErrorMessage(year).strip();
-
             throw new IllegalArgumentException(errorMessage);
         }
     }

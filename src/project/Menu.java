@@ -6,6 +6,7 @@ import project.entrydata.DataEntry; // Добавляем импорт
 import project.sort.SelectionSort;
 import project.sort.SortManager;
 import project.comparator.CarComparator;
+import project.validator.CarValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class Menu {
     private final SortManager sortManager;
     private final SelectionSort<Car> selectionSort; // Сохраняем для shutdown
     private final DataEntry dataEntry;
+    private final CarValidator carValidator;
 
     public Menu() {
         this.isRunning = true;
@@ -31,6 +33,7 @@ public class Menu {
         this.sortManager = new SortManager();
         this.sortManager.setSortingStrategy(selectionSort);
         this.dataEntry = new DataEntry();
+        this.carValidator = new CarValidator();
     }
 
     public List<Car> getCars() {
@@ -216,10 +219,18 @@ public class Menu {
 
         Car[] generatedCars = dataEntry.getCarArray();
         if (generatedCars != null && generatedCars.length > 0) {
+            int i = 0;
             for (Car car : generatedCars) {
-                cars.add(car);
+                i++;
+                if (carValidator.isValid(car)) {
+                    cars.add(car);
+                } else {
+                    System.out.println("Невалидный автомобиль: " + car + "; Errors: " + carValidator.getErrorMessage(car));
+                    i--;
+                }
             }
-            System.out.println("Успешно добавлено " + generatedCars.length + " автомобилей.");
+            System.out.println("Получено " + generatedCars.length + " случайно сгенерированных автомобилей.");
+            System.out.println("Успешно добавлено " + i + " автомобилей.");
             System.out.println("Всего в массиве: " + cars.size() + " автомобилей.");
         } else {
             System.out.println("Не удалось сгенерировать данные.");
