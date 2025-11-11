@@ -219,19 +219,8 @@ public class Menu {
 
         Car[] generatedCars = dataEntry.getCarArray();
         if (generatedCars != null && generatedCars.length > 0) {
-            int i = 0;
-            for (Car car : generatedCars) {
-                i++;
-                if (carValidator.isValid(car)) {
-                    cars.add(car);
-                } else {
-                    System.out.println("Невалидный автомобиль: " + car + "; Errors: " + carValidator.getErrorMessage(car));
-                    i--;
-                }
-            }
-            System.out.println("Получено " + generatedCars.length + " случайно сгенерированных автомобилей.");
-            System.out.println("Успешно добавлено " + i + " автомобилей.");
-            System.out.println("Всего в массиве: " + cars.size() + " автомобилей.");
+            System.out.println("Получено случайно сгенерированных автомобилей: " + generatedCars.length);
+            addValidCars(generatedCars);
         } else {
             System.out.println("Не удалось сгенерировать данные.");
         }
@@ -249,11 +238,8 @@ public class Menu {
 
         Car[] manualCars = dataEntry.getCarArray();
         if (manualCars != null && manualCars.length > 0) {
-            for (Car car : manualCars) {
-                cars.add(car);
-            }
-            System.out.println("Успешно добавлено " + manualCars.length + " автомобилей.");
-            System.out.println("Всего в массиве: " + cars.size() + " автомобилей.");
+            System.out.println("Введены вручную данные автомобилей, количество: " + manualCars.length);
+            addValidCars(manualCars);
         } else {
             System.out.println("Не удалось ввести данные.");
         }
@@ -321,12 +307,31 @@ public class Menu {
                 this.cars.clear();
                 System.out.println("Массив очищен.");
             }
-            this.cars.addAll(loadedCars);
-            System.out.println("Успешно загружено " + loadedCars.size() + " автомобилей из файла.");
-            System.out.println("Всего в массиве: " + cars.size() + " автомобилей.");
+            System.out.println("Успешно загружено автомобилей из файла: " + loadedCars.size());
+            addValidCars(loadedCars);
         } else {
             System.out.println("Не удалось загрузить данные из файла.");
         }
+    }
+
+    private void addValidCars(List<Car> carsList) {
+        Car[] carsArray = carsList.toArray(new Car[0]);
+        addValidCars(carsArray);
+    }
+
+    private void addValidCars(Car[] inputArray) {
+        int i = 0;
+        for (Car car : inputArray) {
+            i++;
+            if (carValidator.isValid(car)) {
+                cars.add(car);
+            } else {
+                System.out.println("Невалидный автомобиль: " + car + "; Errors: " + carValidator.getErrorMessage(car));
+                i--;
+            }
+        }
+        System.out.println("Успешно добавлено " + i + " автомобилей.");
+        System.out.println("Всего в массиве: " + cars.size() + " автомобилей.");
     }
 
     private void printCurrentArray() {
