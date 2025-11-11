@@ -53,11 +53,19 @@ public class DataEntry {
 
             while (!validCar) {
                 try {
-                    System.out.print("Модель: ");
-                    String model = scanner.nextLine();
+                    String model;
+                    while (true) {
+                        System.out.print("Модель: ");
+                        model = scanner.nextLine();
+                        if (carValidator.isValidModel(model)) {
+                            break;
+                        }
+                        System.out.println(carValidator.getModelErrorMessage(model));
+                        System.out.println("Повторите ввод.");
+                    }
 
                     int power;
-                    while(true) {
+                    while (true) {
                         System.out.print("Мощность (л.с.): ");
                         power = scanner.nextInt();
                         if (carValidator.isValidPower(power)) {
@@ -66,9 +74,16 @@ public class DataEntry {
                         System.out.println(carValidator.getPowerErrorMessage(power));
                         System.out.println("Повторите ввод.");
                     }
-
-                    System.out.print("Год выпуска: ");
-                    int year = scanner.nextInt();
+                    int year;
+                    while (true) {
+                        System.out.print("Год выпуска: ");
+                        year = scanner.nextInt();
+                        if (carValidator.isValidYear(year)) {
+                            break;
+                        }
+                        System.out.println(carValidator.getYearErrorMessage(year));
+                        System.out.println("Повторите ввод.");
+                    }
                     scanner.nextLine(); // очистка буфера
 
                     myArray[i] = Car.builder()
