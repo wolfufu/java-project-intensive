@@ -180,6 +180,9 @@ public class Menu {
     }
 
     private void fillDataArray() {
+        if (!cars.isEmpty()) {
+            addNewElements();
+        }
         System.out.println("\n=== СПОСОБ ЗАПОЛНЕНИЯ ===");
         System.out.println("1. Загрузить из файла");
         System.out.println("2. Случайная генерация");
@@ -187,17 +190,16 @@ public class Menu {
         System.out.println("4. Назад в главное меню");
 
         int choice = getIntInput("Выберите способ: ");
-        boolean flag = addNewElements();
 
         switch (choice) {
             case 1:
-                loadFromFile(flag);
+                loadFromFile();
                 break;
             case 2:
-                generateRandomData(flag);
+                generateRandomData();
                 break;
             case 3:
-                enterManualData(flag);
+                enterManualData();
                 break;
             case 4:
                 System.out.println("Возвращаем в главное меню...");
@@ -207,13 +209,8 @@ public class Menu {
         }
     }
 
-    private void generateRandomData(boolean addFlag) {
+    private void generateRandomData() {
         System.out.println("\n=== СЛУЧАЙНАЯ ГЕНЕРАЦИЯ ДАННЫХ ===");
-
-        if (!addFlag) {
-            cars.clear();
-            System.out.println("Массив очищен.");
-        }
 
         dataEntry.dataEntry(false);
 
@@ -226,13 +223,8 @@ public class Menu {
         }
     }
 
-    private void enterManualData(boolean addFlag) {
+    private void enterManualData() {
         System.out.println("\n=== РУЧНОЙ ВВОД ДАННЫХ ===");
-
-        if (!addFlag) {
-            cars.clear();
-            System.out.println("Массив очищен.");
-        }
 
         dataEntry.dataEntry(true);
 
@@ -245,25 +237,23 @@ public class Menu {
         }
     }
 
-    private boolean addNewElements() {
+    private void addNewElements() {
         System.out.println("\n=== ЗАПОЛНЕНИЕ ===");
         System.out.println("1. Перезаписать массив");
         System.out.println("2. Добавить к существующему");
-
         int choice = getIntInput("Выберите вариант: ");
 
         switch (choice) {
-            case 1:
-                return false;
-            case 2:
-                return true;
-            default:
-                System.out.println("Неверный выбор.");
+            case 1 -> {
+                cars.clear();
+                System.out.println("\nМассив очищен.");
+            }
+            case 2 -> {}
+            default -> System.out.println("Неверный выбор.");
         }
-        return false;
     }
 
-    private void loadFromFile(boolean addFlag) {
+    private void loadFromFile() {
         System.out.println("\n=== ФАЙЛ С ДАННЫМИ ===");
         System.out.println("1. Файл по умолчанию");
         System.out.println("2. Пользовательский файл");
@@ -303,10 +293,6 @@ public class Menu {
         List<Car> loadedCars = fileDataLoader.loadFromFile(filename, checkDuplicates);
 
         if (loadedCars != null && !loadedCars.isEmpty()) {
-            if (!addFlag) {
-                this.cars.clear();
-                System.out.println("Массив очищен.");
-            }
             System.out.println("Успешно загружено автомобилей из файла: " + loadedCars.size());
             addValidCars(loadedCars);
         } else {
